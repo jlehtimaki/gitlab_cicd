@@ -1,6 +1,6 @@
 variables:
-  STAGING_NS: gl_staging
-  PROD_NS: gl_prod
+  STAGING_NS: gl-staging
+  PROD_NS: gl-prod
 
 stages:
   - build
