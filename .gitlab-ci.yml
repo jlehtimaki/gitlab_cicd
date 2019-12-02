@@ -13,7 +13,7 @@ build:
   stage: build
   script:
     - docker login -u $CI_USERNAME -p $CI_PASSWORD
-    - docker build --pull -t $CI_REGISTRY_IMAGE:$CI_BUILD_REF .
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_REF .
     - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF
 
   artifacts:
