@@ -20,4 +20,4 @@ build:
 
 testing_testing:
   stage: test
-  script: npm test && npm lint
+  script: npm test
