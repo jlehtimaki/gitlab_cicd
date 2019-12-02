@@ -16,13 +16,13 @@ cache:
     - node_modules/
 
 build:
+  stage: build
   image: docker:git
   services:
     - docker:dind
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_HOST: tcp://localhost:2375
-  stage: build
   script:
     - docker login -u $CI_USERNAME -p $CI_PASSWORD
     - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_REF .
