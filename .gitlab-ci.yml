@@ -1,6 +1,9 @@
-image: docker:latest
+image: docker:git
 services:
   - docker:dind
+variables:
+  DOCKER_DRIVER: overlay
+  DOCKER_HOST: tcp://localhost:2375
 
 stages:
   - test
@@ -11,9 +14,6 @@ stages:
 cache:
   paths:
     - node_modules/
-
-variables:
-  DOCKER_DRIVER: overlay
 
 build:
   stage: build
