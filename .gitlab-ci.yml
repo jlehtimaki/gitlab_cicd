@@ -1,13 +1,84 @@
+image: docker:latest
+services:
+  - docker:dind
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_HOST: tcp://localhost:2376
+
+before_script:
+  - printenv
+  - docker info
+
 stages:
+  - test
   - build
+  - staging
+  - production
+
+cache:
+  paths:
+    - node_modules/
 
 build:
-  stage: test
-  image: docker:dind
+  image: docker:latest
   services:
     - docker:dind
   variables:
-    DOCKER_DRIVER: overlay
-    DOCKER_HOST: tcp://localhost:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://localhost:2376
+  stage: build
   script:
-    - docker build -t foobar .
+    - docker login -u $CI_USERNAME -p $CI_PASSWORD
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_REF .
+    - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF
+
+  artifacts:
+    paths:
+      - node_modules/
+
+testing_testing:
+  image: node:8.12.0
+  stage: test
+  script:
+    - npm install
+    - npm test
+  artifacts:
+    paths:
+      - node_modules/
+
+.prod_deploy: &prod_deploy
+  image: google/cloud-sdk
+  stage: production
+  environment: production
+  script:
+    - kubectl patch deployment $PRODUCTION_SERVICE_NAME -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$PRODUCTION_SERVICE_NAME"'","image":"'"$CI_REGISTRY_IMAGE:$CI_BUILD_REF"'"}]}}}}'
+
+.staging_deploy: &staging_deploy
+  image: google/cloud-sdk
+  stage: staging
+  environment: staging
+  script:
+    - kubectl patch deployment $STAGING_SERVICE_NAME -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$STAGING_SERVICE_NAME"'","image":"'"$CI_REGISTRY_IMAGE:$CI_BUILD_REF"'"}]}}}}'
+
+auto-deploy-master:
+  <<: *staging_deploy
+  only:
+    - master
+
+auto-deploy-tags:
+  <<: *prod_deploy
+  only:
+    - tags
+
+deploy to staging:
+  <<: *staging_deploy
+  when: manual
+  except:
+    - master
+    - tags
+
+deploy to production:
+  <<: *prod_deploy
+  when: manual
+  only:
+    - master
