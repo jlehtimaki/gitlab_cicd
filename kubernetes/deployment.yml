@@ -1,11 +1,14 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hello-world-app
   labels:
     app: hello-world-app
 spec:
+  selector:
+    matchLabels:
+      app: hello-world-app
   replicas: 1
   template:
     metadata:
@@ -14,7 +17,7 @@ spec:
     spec:
       containers:
         - name: hello-world-app
-          image: lehtux/gitlab:master
+          image: lehtux/gitlab:$CI_BUILD_REF
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
@@ -33,3 +36,38 @@ spec:
             limits:
               cpu: 200m
               memory: 300Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-app
+  labels:
+    app: hello-world-app
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: hello-world-app
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hello-world-app
+  annotations:
+    kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+    - hosts:
+        - hello.k8s-demo.polarsquad.com
+      secretName: hello-world-app-tls
+  rules:
+    - host: testsite1.jlehtimaki.polarsquad.dev
+      http:
+        paths:
+          - backend:
+              serviceName: hello-world-app
+              servicePort: 3000
+---
