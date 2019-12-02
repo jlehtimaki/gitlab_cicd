@@ -3,7 +3,6 @@ services:
   - docker:dind
 variables:
   DOCKER_DRIVER: overlay
-  DOCKER_HOST: tcp://localhost:2375
 
 stages:
   - test
@@ -16,6 +15,12 @@ cache:
     - node_modules/
 
 build:
+  image: docker:dind
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay
+    DOCKER_HOST: tcp://localhost:2375
   stage: build
   script:
     - docker login -u $CI_USERNAME -p $CI_PASSWORD
