@@ -1,0 +1,23 @@
+image: node:8.12.0
+
+stages:
+  - build
+  - test
+  - staging
+  - production
+
+cache:
+  paths:
+    - node_modules/
+
+build:
+  stage: build
+  script:
+    - npm install
+  artifacts:
+    paths:
+      - node_modules/
+
+testing_testing:
+  stage: test
+  script: npm test && npm lint
