@@ -7,7 +7,6 @@ variables:
   DOCKER_HOST: tcp://localhost:2375
 
 stages:
-  - test
   - build
   - staging
   - production
@@ -22,7 +21,7 @@ build:
     - docker:dind
   variables:
     DOCKER_DRIVER: overlay2
-    DOCKER_HOST: tcp://localhost:2376
+    DOCKER_HOST: tcp://localhost:2375
   stage: build
   script:
     - docker login -u $CI_USERNAME -p $CI_PASSWORD
