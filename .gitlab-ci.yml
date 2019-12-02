@@ -1,4 +1,4 @@
-image: docker:git
+image: docker:dind
 services:
   - docker:dind
 
@@ -17,7 +17,7 @@ cache:
 
 build:
   stage: build
-  image: docker:git
+  image: docker:dind
   services:
     - docker:dind
   variables:
