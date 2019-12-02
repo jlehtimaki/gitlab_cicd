@@ -1,4 +1,3 @@
-
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -12,7 +11,7 @@ spec:
     - hello.k8s-demo.polarsquad.com
     secretName: hello-world-app-tls
   rules:
-  - host: hello.k8s-demo.polarsquad.com
+  - host: testsite1.jlehtimaki.polarsquad.dev
     http:
       paths:
       - backend:

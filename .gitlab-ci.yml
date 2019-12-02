@@ -1,10 +1,13 @@
 image: node:8.12.0
 
 stages:
-  - build
   - test
+  - build
   - staging
   - production
+
+before_script:
+  - docker login -u $CI_USERNAME -p $CI_PASSWORD $CI_REGISTRY
 
 cache:
   paths:
@@ -13,11 +16,54 @@ cache:
 build:
   stage: build
   script:
-    - npm install
+    - docker build --pull -t $CI_REGISTRY_IMAGE:$CI_BUILD_REF .
+    - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF
   artifacts:
     paths:
       - node_modules/
 
 testing_testing:
   stage: test
-  script: npm test
+  script:
+    - npm install
+    - npm test
+  artifacts:
+    paths:
+      - node_modules/
+
+.prod_deploy: &prod_deploy
+  image: google/cloud-sdk
+  stage: production
+  environment: production
+  script:
+    - kubectl patch deployment $PRODUCTION_SERVICE_NAME -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$PRODUCTION_SERVICE_NAME"'","image":"'"$CI_REGISTRY_IMAGE:$CI_BUILD_REF"'"}]}}}}'
+
+.staging_deploy: &staging_deploy
+  image: google/cloud-sdk
+  stage: staging
+  environment: staging
+  script:
+    - kubectl patch deployment $STAGING_SERVICE_NAME -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$STAGING_SERVICE_NAME"'","image":"'"$CI_REGISTRY_IMAGE:$CI_BUILD_REF"'"}]}}}}'
+
+auto-deploy-master:
+  <<: *staging_deploy
+  only:
+    - master
+
+auto-deploy-tags:
+  <<: *prod_deploy
+  only:
+    - tags
+
+deploy to staging:
+  <<: *staging_deploy
+  when: manual
+  except:
+    - master
+    - tags
+
+deploy to production:
+  <<: *prod_deploy
+  when: manual
+  only:
+    - master
