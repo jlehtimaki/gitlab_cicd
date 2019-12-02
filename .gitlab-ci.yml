@@ -2,65 +2,15 @@ image: docker:git
 services:
   - docker:dind
 
-variables:
-  DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://localhost:2375
-
 stages:
   - build
-  - staging
-  - production
-
-cache:
-  paths:
-    - node_modules/
 
 build:
   stage: build
   image: docker:git
   services:
     - docker:dind
-  variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_HOST: tcp://localhost:2375
   script:
     - docker login -u $CI_USERNAME -p $CI_PASSWORD
     - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_REF .
     - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF
-
-.prod_deploy: &prod_deploy
-  image: google/cloud-sdk
-  stage: production
-  environment: production
-  script:
-    - kubectl patch deployment $PRODUCTION_SERVICE_NAME -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$PRODUCTION_SERVICE_NAME"'","image":"'"$CI_REGISTRY_IMAGE:$CI_BUILD_REF"'"}]}}}}'
-
-.staging_deploy: &staging_deploy
-  image: google/cloud-sdk
-  stage: staging
-  environment: staging
-  script:
-    - kubectl patch deployment $STAGING_SERVICE_NAME -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$STAGING_SERVICE_NAME"'","image":"'"$CI_REGISTRY_IMAGE:$CI_BUILD_REF"'"}]}}}}'
-
-auto-deploy-master:
-  <<: *staging_deploy
-  only:
-    - master
-
-auto-deploy-tags:
-  <<: *prod_deploy
-  only:
-    - tags
-
-deploy to staging:
-  <<: *staging_deploy
-  when: manual
-  except:
-    - master
-    - tags
-
-deploy to production:
-  <<: *prod_deploy
-  when: manual
-  only:
-    - master
