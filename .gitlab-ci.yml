@@ -1,18 +1,13 @@
-image: docker:git
-
-services:
-  - docker:dind
-
-variables:
-  DOCKER_HOST: tcp://localhost:2375
-  DOCKER_DRIVER: overlay2
-
-before_script:
-  - printenv
-  - docker info
-  - docker version
+stages:
+  - build
 
 build:
-  stage: build
+  stage: test
+  image: docker:dind
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay
+    DOCKER_HOST: tcp://localhost:2375
   script:
-    - docker build -t my-docker-image .
+    - docker build -t foobar .
