@@ -23,7 +23,6 @@ build:
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_HOST: tcp://localhost:2375
-    DOCKER_TLS_VERIFY: 1
   script:
     - docker login -u $CI_USERNAME -p $CI_PASSWORD
     - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_REF .
