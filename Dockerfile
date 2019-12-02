@@ -15,4 +15,5 @@ RUN yarn install --production
 
 COPY --from=build dist/ .
 
+EXPOSE 3000
 CMD ["node", "server.js"]
