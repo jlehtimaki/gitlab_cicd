@@ -28,20 +28,6 @@ build:
     - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_REF .
     - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF
 
-  artifacts:
-    paths:
-      - node_modules/
-
-testing_testing:
-  image: node:8.12.0
-  stage: test
-  script:
-    - npm install
-    - npm test
-  artifacts:
-    paths:
-      - node_modules/
-
 .prod_deploy: &prod_deploy
   image: google/cloud-sdk
   stage: production
