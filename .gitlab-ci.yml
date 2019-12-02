@@ -3,8 +3,12 @@ services:
   - docker:dind
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_HOST: tcp://localhost:2376
 
+before_script:
+  - printenv
+  - docker info
+  - docker ps
 
 stages:
   - test
@@ -22,7 +26,7 @@ build:
     - docker:dind
   variables:
     DOCKER_DRIVER: overlay2
-    DOCKER_HOST: tcp://localhost:2375
+    DOCKER_HOST: tcp://localhost:2376
   stage: build
   script:
     - docker login -u $CI_USERNAME -p $CI_PASSWORD
