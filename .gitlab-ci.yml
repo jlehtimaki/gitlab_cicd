@@ -10,6 +10,8 @@ cache:
 
 build:
   image: docker:latest
+  services:
+    - docker:dind
   stage: build
   script:
     - docker login -u $CI_USERNAME -p $CI_PASSWORD
