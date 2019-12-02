@@ -2,8 +2,13 @@ image: docker:git
 services:
   - docker:dind
 
+variables:
+  STAGING_NS: gl_staging
+  PROD_NS: gl_prod
+
 stages:
   - build
+  - staging
 
 build:
   stage: build
@@ -14,3 +19,10 @@ build:
     - docker login -u $CI_USERNAME -p $CI_PASSWORD
     - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_REF .
     - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF
+
+staging:
+  image: google/cloud-sdk
+  stage: staging
+  environment: staging
+  script:
+    - ls -la
