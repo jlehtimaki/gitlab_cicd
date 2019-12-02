@@ -1,3 +1,7 @@
+image: docker:latest
+services:
+  - docker:dind
+
 stages:
   - test
   - build
@@ -12,9 +16,6 @@ variables:
   DOCKER_DRIVER: overlay
 
 build:
-  image: docker:dind
-  services:
-    - docker:dind
   stage: build
   script:
     - docker login -u $CI_USERNAME -p $CI_PASSWORD
