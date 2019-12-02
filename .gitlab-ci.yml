@@ -15,7 +15,7 @@ cache:
     - node_modules/
 
 build:
-  image: docker:dind
+  image: docker:git
   services:
     - docker:dind
   variables:
