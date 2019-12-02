@@ -1,13 +1,10 @@
-image: docker:latest
+image: docker:git
 services:
   - docker:dind
+
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://localhost:2376
-
-before_script:
-  - printenv
-  - docker info
+  DOCKER_HOST: tcp://localhost:2375
 
 stages:
   - test
@@ -20,7 +17,7 @@ cache:
     - node_modules/
 
 build:
-  image: docker:latest
+  image: docker:git
   services:
     - docker:dind
   variables:
