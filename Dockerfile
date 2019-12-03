@@ -8,7 +8,7 @@ LABEL maintainer="joonas.lehtimaki@polarsquad.com"
 WORKDIR /app
 
 # Copy the source from the current directory to the Working Directory inside the container
-COPY assets .
+COPY assets/ .
 COPY index.html .
 COPY main .
 
