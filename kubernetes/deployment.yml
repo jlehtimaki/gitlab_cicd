@@ -37,7 +37,6 @@ metadata:
   labels:
     app: hello-world-app
 spec:
-  type: NodePort
   ports:
     - name: http
       port: 8080
@@ -51,14 +50,15 @@ kind: Ingress
 metadata:
   name: hello-world-app
   annotations:
-    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/issuer: "letsencrypt-prod"
 spec:
   tls:
     - hosts:
-        - testsite3.jlehtimaki.polarsquad.dev
+        - kalles.jlehtimaki.polarsquad.dev
       secretName: hello-world-app-tls
   rules:
-    - host: testsite3.jlehtimaki.polarsquad.dev
+    - host: kalles.jlehtimaki.polarsquad.dev
       http:
         paths:
           - backend:
