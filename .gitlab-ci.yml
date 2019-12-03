@@ -55,6 +55,8 @@ staging:
     - envsubst < kubernetes/deployment.yml | kubectl apply -n $KUBE_NAMESPACE -f -
 
 production:
+  variables:
+    PROJECT_URL: $PROD_PROJECT_URL
   image: lehtux/cloud-sdk
   stage: production
   when: manual
