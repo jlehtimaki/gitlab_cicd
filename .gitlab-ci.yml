@@ -4,26 +4,26 @@ variables:
   PROD_PROJECT_URL: glawesome
 
 stages:
-  - test
-  - build
+  - test-and-build
   - release
   - staging
+  - production
 
 test:
-  stage: test
+  stage: test-and-build
   script:
     - go test
 
 build:
-  stage: build
+  stage: test-and-build
   script:
     - go build -o main
   artifacts:
     paths:
       - main
 
-docker_build:
-  stage: build
+release:
+  stage: release
   image: docker:git
   services:
     - docker:dind
@@ -51,7 +51,7 @@ production:
   variables:
     PROJECT_URL: $PROD_PROJECT_URL
   image: lehtux/cloud-sdk
-  stage: release
+  stage: production
   when: manual
   only:
     - master
