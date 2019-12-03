@@ -3,11 +3,25 @@ variables:
   PROD_NS: gl-prod
 
 stages:
+  - test
   - build
+  - release
   - staging
+
+test:
+  stage: test
+  image: golang:latest
+  script:
+    - go test
 
 build:
   stage: build
+  image: golang:latest
+  script:
+    - go build -o main
+
+release:
+  stage: release
   image: docker:git
   services:
     - docker:dind
