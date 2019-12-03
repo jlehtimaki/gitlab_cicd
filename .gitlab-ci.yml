@@ -2,7 +2,8 @@ image: golang:latest
 
 variables:
   STAGING_NS: gitlab-staging
-
+  STAGING_PROJECT_URL: $CI_BUILD_ID.staging
+  PROD_PROJECT_URL: glawesome
 stages:
   - test
   - build
@@ -33,10 +34,16 @@ release:
     - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF
 
 staging:
+  variables:
+    PROJECT_URL: $STAGING_PROJECT_URL
   image: lehtux/cloud-sdk
   stage: staging
   environment: staging
   dependencies: []
   script:
-    - printenv
+    - kubectl config set-cluster k8s --server="${SERVER}"
+    - kubectl config set-cluster k8s --certificate-authority=${CERTIFICATE_AUTHORITY_DATA}
+    - kubectl config set-credentials gitlab --token="${USER_TOKEN}"
+    - kubectl config set-context default --cluster=k8s --user gitlab
+    - kubectl config use-context default
     - envsubst < kubernetes/deployment.yml | kubectl apply -f -
