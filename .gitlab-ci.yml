@@ -22,8 +22,8 @@ build:
     paths:
       - main
 
-release:
-  stage: release
+docker_build:
+  stage: build
   image: docker:git
   services:
     - docker:dind
@@ -51,7 +51,7 @@ production:
   variables:
     PROJECT_URL: $PROD_PROJECT_URL
   image: lehtux/cloud-sdk
-  stage: production
+  stage: release
   when: manual
   only:
     - master
