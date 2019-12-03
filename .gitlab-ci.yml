@@ -35,5 +35,9 @@ staging:
   environment: staging
   dependencies: []
   script:
-    - kubectl get pods
+    - kubectl config set-cluster k8s --server="${SERVER}"
+    - kubectl config set-cluster k8s --certificate-authority=${CERTIFICATE_AUTHORITY_DATA}
+    - kubectl config set-credentials gitlab --token="${USER_TOKEN}"
+    - kubectl config set-context default --cluster=k8s
+    - kubectl config use-context "${STAGING_NS}"
     - envsubst < kubernetes/deployment.yml | kubectl apply -f -
