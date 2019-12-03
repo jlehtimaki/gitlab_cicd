@@ -1,9 +1,11 @@
 image: golang:latest
 
 variables:
-  STAGING_NS: gitlab-staging
-  STAGING_PROJECT_URL: ${CI_BUILD_ID}.staging
   PROD_PROJECT_URL: glawesome
+
+before_script:
+  - export STAGING_PROJECT_URL="${CI_BUILD_ID}.staging"
+
 stages:
   - test
   - build
