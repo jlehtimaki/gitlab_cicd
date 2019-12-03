@@ -39,6 +39,9 @@ staging:
   image: lehtux/cloud-sdk
   stage: staging
   environment: staging
+  only:
+    - merge_requests
+    - branches
   dependencies: []
   script:
     - kubectl config set-cluster k8s --server="${SERVER}"
