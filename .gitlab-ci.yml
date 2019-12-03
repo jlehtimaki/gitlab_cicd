@@ -39,7 +39,7 @@ staging:
   stage: staging
   environment:
     name: staging
-    url: https://$CI_BUILD_ID.$KUBE_DOMAIN
+    url: https://$CI_BUILD_ID.$KUBE_INGRESS_BASE_DOMAIN
   only:
     - merge_requests
     - branches
@@ -65,7 +65,7 @@ production:
   allow_failure: false
   environment:
     name: production
-    url: https://$CI_BUILD_ID.$KUBE_DOMAIN
+    url: https://$CI_BUILD_ID.$KUBE_INGRESS_BASE_DOMAIN
   dependencies: []
   script:
     - kubectl config set-cluster k8s --server="${SERVER}"
