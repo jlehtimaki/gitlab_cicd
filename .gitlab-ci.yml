@@ -17,8 +17,9 @@ build:
     - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF
 
 staging:
-  image: google/cloud-sdk
+  image: lehtux/cloud-sdk
   stage: staging
   environment: staging
   script:
+    - kubectl get pods
     - envsubst < kubernetes/deployment.yml | kubectl apply -f -
