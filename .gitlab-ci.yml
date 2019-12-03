@@ -35,5 +35,5 @@ staging:
   environment: staging
   dependencies: []
   script:
-    - kubectl get pods
+    - printenv
     - envsubst < kubernetes/deployment.yml | kubectl apply -f -

@@ -55,10 +55,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - testsite1.jlehtimaki.polarsquad.dev
+        - testsite3.jlehtimaki.polarsquad.dev
       secretName: hello-world-app-tls
   rules:
-    - host: testsite1.jlehtimaki.polarsquad.dev
+    - host: testsite3.jlehtimaki.polarsquad.dev
       http:
         paths:
           - backend:
