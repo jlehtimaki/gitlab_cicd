@@ -37,6 +37,7 @@ metadata:
   labels:
     app: hello-world-app
 spec:
+  type: NodePort
   ports:
     - name: http
       port: 80
