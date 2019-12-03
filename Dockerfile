@@ -1,19 +1,18 @@
-FROM node:8.12.0 as build
-RUN npm install -g yarn
+# Start from the latest golang base image
+FROM golang:latest
 
-COPY . .
-RUN yarn install
-RUN yarn build
+# Add Maintainer Info
+LABEL maintainer="joonas.lehtimaki@polarsquad.com"
 
-### FINAL IMAGE ###
-FROM node:8.12.0
-RUN npm install -g yarn
+# Set the Current Working Directory inside the container
+WORKDIR /app
 
-COPY package.json .
-COPY yarn.lock .
-RUN yarn install --production
+# Copy the source from the current directory to the Working Directory inside the container
+COPY assets .
+COPY main .
 
-COPY --from=build dist/ .
+# Expose port 8080 to the outside world
+EXPOSE 8080
 
-EXPOSE 3000
-CMD ["node", "server.js"]
+# Command to run the executable
+CMD ["./main"]
