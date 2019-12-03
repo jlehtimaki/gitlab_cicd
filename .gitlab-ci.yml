@@ -2,7 +2,7 @@ image: golang:latest
 
 variables:
   STAGING_NS: gitlab-staging
-  STAGING_PROJECT_URL: "${CI_BUILD_ID}.staging"
+  STAGING_PROJECT_URL: ${CI_BUILD_ID}.staging
   PROD_PROJECT_URL: glawesome
 stages:
   - test
