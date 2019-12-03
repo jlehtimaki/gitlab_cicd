@@ -9,7 +9,7 @@ WORKDIR /app
 
 # Copy the source from the current directory to the Working Directory inside the container
 COPY assets .
-COPY index.html
+COPY index.html .
 COPY main .
 
 # Expose port 8080 to the outside world
