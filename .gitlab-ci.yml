@@ -44,6 +44,7 @@ staging:
   only:
     - merge_requests
     - branches
+    - master
   dependencies: []
   script:
     - kubectl config set-cluster k8s --server="${SERVER}"
