@@ -61,7 +61,7 @@ metadata:
 spec:
   tls:
     - hosts:
-        - hello.k8s-demo.polarsquad.com
+        - testsite1.jlehtimaki.polarsquad.dev
       secretName: hello-world-app-tls
   rules:
     - host: testsite1.jlehtimaki.polarsquad.dev
