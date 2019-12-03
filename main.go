@@ -42,7 +42,7 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "3000"
+		port = "8080"
 	}
 
 	mux := http.NewServeMux()
