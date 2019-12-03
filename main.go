@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"html/template"
 	"math/rand"
 	"net/http"
@@ -17,6 +18,11 @@ type Images struct {
 	Image	string
 }
 
+type Status struct {
+	Status		int		`json:"status"`
+	Response 	string	`json:"response"`
+}
+
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	rand.Seed(time.Now().Unix()) // initialize global pseudo random generator
 	data := Images{
@@ -26,7 +32,11 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
-	return w
+	returnData := Status{
+		Status:   200,
+		Response: "OK",
+	}
+	json.NewEncoder(w).Encode(returnData)
 }
 
 func main() {
