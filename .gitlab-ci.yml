@@ -1,6 +1,4 @@
-variables:
-  STAGING_NS: gl-staging
-  PROD_NS: gl-prod
+image: docker:1.13-alpine
 
 stages:
   - test
@@ -10,15 +8,16 @@ stages:
 
 test:
   stage: test
-  image: golang:latest
   script:
     - go test
 
 build:
   stage: build
-  image: golang:latest
   script:
     - go build -o main
+  artifacts:
+    paths:
+      - main
 
 release:
   stage: release
