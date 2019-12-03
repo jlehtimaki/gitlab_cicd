@@ -7,6 +7,7 @@ stages:
   - test-and-build
   - release
   - staging
+  - cleanup
   - production
 
 test:
@@ -45,7 +46,24 @@ staging:
     - kubectl config set-credentials gitlab --token="${USER_TOKEN}"
     - kubectl config set-context default --cluster=k8s --user gitlab
     - kubectl config use-context default
-    - envsubst < kubernetes/deployment.yml | kubectl apply -n $KUBE_NAMESPACE-f -
+    - envsubst < kubernetes/deployment.yml | kubectl apply -n $KUBE_NAMESPACE -f -
+
+cleanup:
+  variables:
+    PROJECT_URL: $CI_BUILD_ID
+  image: lehtux/cloud-sdk
+  stage: cleanup
+  environment: staging
+  when: manual
+  dependencies: []
+  script:
+    - kubectl config set-cluster k8s --server="${SERVER}"
+    - kubectl config set-cluster k8s --certificate-authority=${CERTIFICATE_AUTHORITY_DATA}
+    - kubectl config set-credentials gitlab --token="${USER_TOKEN}"
+    - kubectl config set-context default --cluster=k8s --user gitlab
+    - kubectl config use-context default
+    - envsubst < kubernetes/deployment.yml | kubectl delete -n $KUBE_NAMESPACE -f -
+
 
 production:
   variables:
@@ -55,6 +73,7 @@ production:
   when: manual
   only:
     - master
+  allow_failure: false
   environment: production
   dependencies: []
   script:
