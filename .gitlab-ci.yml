@@ -42,7 +42,8 @@ staging:
   stage: staging
   environment: staging
   dependencies: []
-  script:
+  script
+    - printenv
     - kubectl config set-cluster k8s --server="${SERVER}"
     - kubectl config set-cluster k8s --certificate-authority=${CERTIFICATE_AUTHORITY_DATA}
     - kubectl config set-credentials gitlab --token="${USER_TOKEN}"
