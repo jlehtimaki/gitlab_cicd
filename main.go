@@ -25,6 +25,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	tpl.Execute(w, data)
 }
 
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	return w
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -38,5 +42,6 @@ func main() {
 	mux.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
 	mux.HandleFunc("/", indexHandler)
+	mux.HandleFunc("/health", healthHandler)
 	http.ListenAndServe(":"+port, mux)
 }

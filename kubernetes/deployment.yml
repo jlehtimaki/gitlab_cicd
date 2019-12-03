@@ -62,5 +62,5 @@ spec:
         paths:
           - backend:
               serviceName: hello-world-app
-              servicePort: 80
+              servicePort: 8080
 ---

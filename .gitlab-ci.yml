@@ -33,6 +33,7 @@ staging:
   image: lehtux/cloud-sdk
   stage: staging
   environment: staging
+  dependencies: []
   script:
     - kubectl get pods
     - envsubst < kubernetes/deployment.yml | kubectl apply -f -
