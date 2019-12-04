@@ -11,7 +11,7 @@ import (
 
 var tpl = template.Must(template.ParseFiles("index.html"))
 var images = []string {
-	"jeremy.png",
+        "ps_blackmetal.png",
 }
 
 type Images struct {
